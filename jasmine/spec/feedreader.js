@@ -114,9 +114,43 @@ $(function() {
     });
     
     /* TODO: Write a new test suite named "New Feed Selection" */
-
+    describe('New Feed Selection', function() {
         /* TODO: Write a test that ensures when a new feed is loaded
          * by the loadFeed function that the content actually changes.
          * Remember, loadFeed() is asynchronous.
          */
+        let entries, initEntryLinks=[], newEntryLinks=[];
+        
+        beforeEach(function(done){
+            // load init feed 1, CSS Tricks
+            loadFeed(1, function(){
+                // get feed entries in DOM
+                entries = $('.feed .entry-link');
+                // loop through each feed entries
+                for(entry of entries){
+                    // store the entry link in an array (initEntryLinks)
+                    initEntryLinks.push(entry.href);
+                }
+                // load new feed 0, Udacity Blog
+                loadFeed(0, function(){
+                    // get feed entries in DOM
+                    entries = $('.feed .entry-link');
+                    // loop through each feed entries
+                    for(entry of entries){
+                        // store the entry link in an array (newEntryLinks)
+                        newEntryLinks.push(entry.href);
+                    }
+                    done();
+                });
+            });
+        });
+        
+        it('should have new content', function(done) {
+            // ensure that content changes (new content is different from init content)
+            // use deep equality comparison (toEqual) to compare initEntryLinks and newEntryLinks arrays
+            expect(initEntryLinks).not.toEqual(newEntryLinks);
+            done();
+        });
+    });
+    
 }());
